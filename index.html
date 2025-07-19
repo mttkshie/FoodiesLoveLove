@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>I LOVE YOU SO MUCH - Flip Card Surprise</title>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 30px 20px;
+      font-family: 'VT323';
+      font-size: 25px;
+      /* background: linear-gradient(to bottom right, #ffdde1, #ee9ca7); */
+      background: url('bg.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4f0867;
+      margin: 20px 0;
+      font-size: 2em;
+      font-weight: bold;
+      text-shadow: 1px 1px 3px #fff;
+      z-index: 2;
+      position: relative;
+    }
+
+    .cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      max-width: 1200px;
+      margin: auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      width: 180px;
+      height: 240px;
+      perspective: 1000px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front,
+    .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      box-sizing: border-box;
+    }
+
+    .card-front {
+      background: #fff5f7;
+      color: #333;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+    .card-back {
+      background: #fff;
+      transform: rotateY(180deg);
+      flex-direction: column;
+    }
+
+    .card-back img {
+      max-width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .card-back p {
+      font-size: 1em;
+      font-weight: bold;
+      color: #ff3d6a;
+    }
+
+    .floating-flowers {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .flower-petal {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.6;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 0.8;
+      }
+
+      100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="floating-flowers" id="floatingFlowers"></div>
+
+  <h1>I love you so much my beautiful mahal 💞</h1>
+
+  <div class="cards-container" id="cards-container"></div>
+
+  <script>
+    const cards = [
+      { letter: 'I', message: 'In love with your face, body, personality, and everything about you 💘', food: 'Ice Cream', img: '1.png' },
+      { letter: 'L', message: 'Love you more than everything 💤', food: 'Labong', img: '2.png' },
+      { letter: 'O', message: 'Obsessed with your smile 😍', food: 'Onion Rings', img: '3.png' },
+      { letter: 'V', message: 'Very into you.... like very VERY 💖', food: 'Vanilla Cake', img: '4.png' },
+      { letter: 'E', message: 'Even in hard times, my heart chooses you 🥚', food: 'Egg (scrambled/soft boil of course!)', img: '5.png' },
+      { letter: 'Y', message: 'You = my favorite notification 📲', food: 'Yakult', img: '6.png' },
+      { letter: 'O', message: 'Oh my love, you’re my person 🫶', food: 'Okra', img: '7.png' },
+      { letter: 'U', message: 'U + Me = Better than any rom-com 💑', food: 'Udon Ramen', img: '8.png' },
+      { letter: 'S', message: 'Smile is what you always give me ☀️', food: 'Steak', img: '9.png' },
+      { letter: 'O', message: 'One lifetime? Not enough for us 🔁', food: 'Oyster', img: '10.png' },
+      { letter: 'M', message: 'More than words, I will always love you 🍵', food: 'Matcha', img: '11.png' },
+      { letter: 'U', message: 'Unlimited love, unlimited sweetness, unlimited care 🍗', food: 'Unli Chicken Wings', img: '12.png' },
+      { letter: 'C', message: 'Can’t stop thinking about you everyday 😗', food: 'Chocolate', img: '13.png' },
+      { letter: 'H', message: 'Happiness? That’s what keeps me alive 💞', food: 'Halo-Halo', img: '14.png' }
+    ];
+
+    const container = document.getElementById('cards-container');
+
+    cards.forEach(card => {
+      const cardEl = document.createElement('div');
+      cardEl.className = 'card';
+      cardEl.innerHTML = `
+      <div class="card-inner">
+        <div class="card-front">${card.message}</div>
+        <div class="card-back">
+          <img src="${card.img}" alt="${card.food}">
+          <p>${card.food}</p>
+        </div>
+      </div>
+    `;
+      cardEl.addEventListener('click', () => {
+        cardEl.classList.toggle('flipped');
+      });
+      container.appendChild(cardEl);
+    });
+
+    // Flower fall animation
+    const floatingContainer = document.getElementById("floatingFlowers");
+
+    function createFlower() {
+      const flower = document.createElement("div");
+      flower.classList.add("flower-petal");
+
+      const randomIndex = Math.floor(Math.random() * 14) + 1;
+      flower.style.backgroundImage = `url('${randomIndex}.png')`;
+
+      flower.style.left = Math.random() * 100 + "vw";
+      flower.style.animationDuration = 5 + Math.random() * 5 + "s";
+      flower.style.opacity = 0.4 + Math.random() * 0.6;
+      flower.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+      floatingContainer.appendChild(flower);
+
+      setTimeout(() => {
+        flower.remove();
+      }, 10000);
+    }
+
+    setInterval(createFlower, 300);
+  </script>
+
+</body>
+
+</html>
